@@ -18,7 +18,7 @@ And follow the setup instructions  on [this link](https://github.com/larics/dock
 ### 2) Manual installation (if you already have ROS2 installed)
 > We are assuming that you have ROS2 Humble or Iron installed.
 
-Please follow the instructions given on the [Bitcraze](https://www.bitcraze.io/documentation/tutorials/getting-started-with-crazyflie-2-x/#inst-comp) page to setup cfclient and  this [Crazyswarm2](https://github.com/IMRCLab/crazyswarm2) to setup ROS2 packages. Additionally check for aliases script: https://github.com/larics/docker_files/tree/ros-iron-cf/ros2/ros2-iron/crazyflies/to_copy and README in this repository which might come in handy.
+Please follow the instructions given on the [Bitcraze](https://www.bitcraze.io/documentation/tutorials/getting-started-with-crazyflie-2-x/#inst-comp) page to setup cfclient and  this [Crazyswarm2](https://github.com/IMRCLab/crazyswarm2) to setup ROS2 packages. Additionally check for aliases script: https://github.com/larics/docker_files/tree/ros-iron-cf/ros2/ros2-iron/crazyflies-real-world/to_copy and README in this repository which might come in handy.
 
 The folder structure of this package is:
 1. scripts - additional node for static transformation broadcaster from world to odom is there. 
