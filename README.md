@@ -9,11 +9,11 @@ Again, there are two ways you can set up your computer to run the simulation:
 
 ### 1) Docker installation (recommended!!!)
 
-Clone the [repository](https://github.com/larics/docker_files/tree/master/ros2/ros2-iron/crazyflies):
+Clone the [repository](https://github.com/larics/docker_files/tree/master/ros2/ros2-iron/crazyflies-real-world):
 ```
 git clone https://github.com/larics/docker_files.git
 ```
-And follow the setup instructions  on [this link](https://github.com/larics/docker_files/tree/master/ros2/ros2-iron/crazyflies). This docker automatically clones and builds ROS2 mrs_crazyflies_exp package.
+And follow the setup instructions  on [this link](https://github.com/larics/docker_files/tree/master/ros2/ros2-iron/crazyflies-real-world). This docker automatically clones and builds ROS2 mrs_crazyflies_exp package.
 
 ### 2) Manual installation (if you already have ROS2 installed)
 > We are assuming that you have ROS2 Humble or Iron installed.
