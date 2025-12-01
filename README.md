@@ -13,12 +13,12 @@ Clone the [repository](https://github.com/larics/docker_files/tree/master/ros2/r
 ```
 git clone https://github.com/larics/docker_files.git
 ```
-And follow the setup instructions  on [this link](https://github.com/larics/docker_files/tree/master/ros2/ros2-iron/crazyflies-real-world). This docker automatically clones and builds ROS2 mrs_crazyflies_exp package.
+And follow the setup instructions  on [this link](https://github.com/larics/docker_files/tree/master/ros2/ros2-jazzy/crazyflies). This docker automatically clones and builds ROS2 mrs_crazyflies_exp package.
 
 ### 2) Manual installation (if you already have ROS2 installed)
-> We are assuming that you have ROS2 Humble or Iron installed.
+> We are assuming that you have ROS2 Jazzy installed.
 
-Please follow the instructions given on the [Bitcraze](https://www.bitcraze.io/documentation/tutorials/getting-started-with-crazyflie-2-x/#inst-comp) page to setup cfclient and  this [Crazyswarm2](https://github.com/IMRCLab/crazyswarm2) to setup ROS2 packages. Additionally check for aliases script: https://github.com/larics/docker_files/tree/ros-iron-cf/ros2/ros2-iron/crazyflies-real-world/to_copy and README in this repository which might come in handy.
+Please follow the instructions given on the [Bitcraze](https://www.bitcraze.io/documentation/tutorials/getting-started-with-crazyflie-2-x/#inst-comp) page to setup cfclient and  this [Crazyswarm2](https://github.com/IMRCLab/crazyswarm2) to setup ROS2 packages. Additionally check for aliases script: [https://github.com/larics/docker_files/tree/ros-iron-cf/ros2/ros2-iron/crazyflies-real-world/to_copy](https://github.com/larics/docker_files/blob/master/ros2/ros2-jazzy/crazyflies/to_copy/aliases) and README in this repository which might come in handy.
 
 The folder structure of this package is:
 1. scripts - additional node for static transformation broadcaster from world to odom is there. 
@@ -28,7 +28,7 @@ The folder structure of this package is:
 
 ## Topics and services
 
-Velocity commands are published on `/cf_x/cmd_vel` to crazyflie cf_x. Odometry can be obatined from the topic `/cf_x/odom` . Pose can also be obtained from the topic `/cf_x/pose` and velocity from `/cf_x/velocity`, just keep in mind that for this topic message type is not Twist. 
+Velocity commands are published on `/cf_x/cmd_vel` to crazyflie cf_x. Pose can be obtained from the topic `/cf_x/pose` and velocity from `/cf_x/velocity`, just keep in mind that for this topic message type is not Twist. 
 To take off/land you can call services  `/cf_x/takeoff`, `/cf_x/land`. Current vel_mux.py does takeoff automatically, after the first cmd_vel command, but you can call it on your own. 
 
 
