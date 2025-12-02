@@ -38,7 +38,6 @@ docker run -it \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     --volume="/dev:/dev" \
     --volume="/var/run/dbus/:/var/run/dbus/:z" \
-    --volume /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket \
     --volume ~/.ssh/ssh_auth_sock:/ssh-agent \
     --env SSH_AUTH_SOCK=/ssh-agent \
     --net=host \

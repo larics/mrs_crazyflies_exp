@@ -106,7 +106,7 @@ RUN --mount=type=ssh id=default \
     mkdir -p ~/.ssh/ && \
     ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
-# install ROS2 Jazzy
+# install ROS2
 RUN apt update &&  apt install locales \
   && locale-gen en_US en_US.UTF-8 \
   && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
@@ -134,10 +134,6 @@ RUN VERSION="releases/mcap-cli/v0.0.55" && \
     curl -L -o /bin/mcap "$RELEASE_URL" && \
     cd /bin && chmod +x mcap
 
-
-RUN echo "alias ros2_ws='source $HOME/ros2_ws/install/setup.bash'" >> $HOME/.bashrc
-RUN echo "alias source_ros2='source /opt/ros/${ROS2_DISTRO}/setup.bash'" >> $HOME/.bashrc
-
 RUN PYTHON_VERSION=$(python --version | cut -d " " -f2 | cut -d "." -f1,2) && \
     rm -rf /usr/lib/python${PYTHON_VERSION}/EXTERNALLY-MANAGED
 
@@ -150,41 +146,26 @@ RUN apt-get update && apt install -y \
   swig3.0 \
   && ln -s /usr/bin/swig3.0 /usr/bin/swig
 
-
-# RUN PYTHON_VERSION=$(python --version | cut -d " " -f2 | cut -d "." -f1,2) && \
-#    rm -rf /usr/lib/python${PYTHON_VERSION}/EXTERNALLY-MANAGED
-# RUN python3 -m venv /venv && \
-#   /venv/bin/pip install --upgrade pip
-
-
 RUN pip install --ignore-installed rowan transforms3d nicegui
-
 
 RUN apt install -y ros-${ROS2_DISTRO}-tf-transformations \
                    ros-${ROS2_DISTRO}-nav2-map-server \
                    ros-${ROS2_DISTRO}-nav2-lifecycle-manager\
                    ros-${ROS2_DISTRO}-rosbridge-suite\
-                   ros-${ROS2_DISTRO}-rosbag2-storage-mcap
+                   ros-${ROS2_DISTRO}-rosbag2-storage-mcap\
+                   ros-${ROS2_DISTRO}-foxglove-bridge
 
 
-RUN mkdir -p $HOME/ros2_ws/src && cd $HOME/ros2_ws/src \
+RUN mkdir -p ${HOME}/ros2_ws/src && cd ${HOME}/ros2_ws/src \
   && git clone https://github.com/IMRCLab/crazyswarm2 --recursive \
   && git clone --recurse-submodules https://github.com/IMRCLab/motion_capture_tracking \
   && git clone https://github.com/larics/mrs_crazyflies_exp.git
 
-RUN echo "export PATH='$HOME/.local/bin:$PATH'" >> $HOME/.bashrcrc
-
-# setup ros2 environment variables
-RUN echo "export ROS_LOCALHOST_ONLY=1" >> $HOME/.bashrc
-RUN echo "export ROS_DOMAIN_ID=$(shuf -i 1-101 -n 1)" >> $HOME/.bashrc
-
-
 WORKDIR $HOME/ros2_ws
-
 # Final build of ROS2 ws
+RUN bash -c "source /opt/ros/${ROS2_DISTRO}/setup.bash;source $HOME/ros2_ws/install/setup.bash;colcon build --symlink-install --merge-install --cmake-args=-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 
-RUN bash -c "source /opt/ros/${ROS2_DISTRO}/setup.bash;source $HOME/ros2_ws/install/setup.bash;colcon build --symlink-install --merge-install --cmake-args=-DCMAKE_EXPORT_COMPILE_COMMANDS=ON" && \
-    echo "ros2_ws" >> $HOME/.bashrc && echo "source_ros2" >> $HOME/.bashrc
+RUN echo "export PATH='$HOME/.local/bin:$PATH'" >> $HOME/.bashrc
 
 RUN  apt install -y\
     libfontconfig1-dev \
@@ -216,34 +197,47 @@ RUN  apt install -y\
 RUN pip install --upgrade pip
 
 RUN cd $HOME && git clone https://github.com/bitcraze/crazyflie-clients-python \
-&& cd crazyflie-clients-python \
-&& pip install --ignore-installed  -e .
+    && cd crazyflie-clients-python \
+    && pip install --ignore-installed  -e .
 
 RUN cd $HOME && git clone --recursive https://github.com/bitcraze/crazyflie-firmware.git \
-&& cd crazyflie-firmware && git submodule init && git submodule update \
-&& make cf2_defconfig \
-&& make -j 12 \
-&& make bindings_python \
-&& cd build \
-&& python3 setup.py install --user \
-&& export PYTHONPATH=$HOME/crazyflie-firmware/build:$PYTHONPATH
+    && cd crazyflie-firmware && git submodule init && git submodule update \
+    && make cf2_defconfig \
+    && make -j 12 \
+    && make bindings_python \
+    && cd build \
+    && python3 setup.py install --user \
+    && export PYTHONPATH=$HOME/crazyflie-firmware/build:$PYTHONPATH
 
 RUN cd $HOME && git clone https://github.com/bitcraze/lps-tools.git \
-&& cd $HOME/lps-tools \
-&& pip install --ignore-installed -e .
+    && cd $HOME/lps-tools \
+    && pip install --ignore-installed -e .
 
 # RUN pip install --upgrade pyusb scipy numpy
 # RUN pip install numpy==1.26
 
 # Fix https://github.com/ros2/ros2/issues/1702
 RUN pip install setuptools==79.0.1
+
+RUN echo "alias ros2_ws='source $HOME/ros2_ws/install/setup.bash'" >> $HOME/.bashrc
+RUN echo "alias source_ros2='source /opt/ros/${ROS2_DISTRO}/setup.bash'" >> $HOME/.bashrc
 RUN echo "alias cd_mrs_crazyflies_exp='cd /root/ros2_ws/src/mrs_crazyflies_exp'" >> $HOME/.bashrc
+
+# setup ros2 environment variables (safe defaults)
+RUN echo "export ROS_LOCALHOST_ONLY=1" >> ${HOME}/.bashrc
+RUN echo "export ROS_DOMAIN_ID=$(shuf -i 1-101 -n 1)" >> ${HOME}/.bashrc
 
 ENV USERNAME=root
 
 # Fix specific git versions
-RUN cd /root/ros2_ws/src/crazyswarm2 && git checkout b0070beced66ca27dcc3925145bcc1acd03954be
+RUN cd /root/ros2_ws/src/crazyswarm2 && git checkout b0070beced66ca27dcc3925145bcc1acd03954b
+
+# Final build of ROS2 ws
+WORKDIR $HOME/ros2_ws
 RUN bash -c "source /opt/ros/${ROS2_DISTRO}/setup.bash;source $HOME/ros2_ws/install/setup.bash;colcon build --symlink-install --merge-install --cmake-args=-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+
+RUN echo "ros2_ws" >> $HOME/.bashrc
+RUN echo "source_ros2" >> $HOME/.bashrc
 
 RUN cd /root/crazyflie-clients-python && git checkout d6bc2701556fcc4e4a13f7b85bb9aae4d4c74700 && pip install --ignore-installed  -e .
 RUN cd /root/crazyflie-firmware && git checkout 6532d3876741c3e14fb3fd2626d506d06bb1d147 && git submodule update \
@@ -255,24 +249,16 @@ RUN cd /root/crazyflie-firmware && git checkout 6532d3876741c3e14fb3fd2626d506d0
   && export PYTHONPATH=$HOME/crazyflie-firmware/build:$PYTHONPATH
 RUN cd /root/lps-tools && git checkout 966a9b9117ee6a6e7913765769fee980d6ef84c4 && pip install --ignore-installed -e .
 
-
-# Add user and add it to sudo group
-RUN sudo usermod -a -G plugdev $USERNAME
-COPY to_copy/99-bitcraze.rules /etc/udev/rules.d/.
-
-COPY to_copy/99-lps.rules /etc/udev/rules.d/.
-RUN sudo adduser $USERNAME dialout
-
 WORKDIR $HOME
-RUN mkdir $HOME/startup
-COPY to_copy/session.yml $HOME/startup/
-COPY to_copy/start.sh $HOME/startup/
+# Add user and add it to sudo group
+RUN usermod -aG plugdev $USERNAME && adduser $USERNAME dialout
+COPY to_copy/99-bitcraze.rules /etc/udev/rules.d/.
+COPY to_copy/99-lps.rules /etc/udev/rules.d/.
+
 COPY to_copy/aliases $HOME/.bash_aliases
 COPY to_copy/nanorc $HOME/.nanorc
 COPY to_copy/tmux $HOME/.tmux.conf
 COPY to_copy/ranger $HOME/.config/ranger/rc.conf
-# COPY to_copy/crazyflies.yaml /root/ros2_ws/src/crazyswarm2/crazyflie/config/crazyflies.yaml
-# COPY to_copy/motion_capture.yaml /root/ros2_ws/src/crazyswarm2/crazyflie/config/motion_capture.yaml
 
 USER root
 WORKDIR $HOME
