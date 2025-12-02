@@ -1,44 +1,29 @@
 # named list of all robots
 robots:
-  cf_1:
+  cf_1: #red
     enabled: true
-    uri: radio://0/95/2M/E7E7E7E7EF
-    initial_position: [0.0, 0.0, 0.0]
+    uri: radio://0/95/2M/E7E7E7E7E4
+    initial_position: [0.0, 1.0, 0.0]
     type: cf21  # see robot_types
-    # firmware_params:
-    #   kalman:
-    #     pNAcc_xy: 1.0 # default 0.5
-    # firmware_logging:
-    #   enabled: true
-    #   custom_topics:
-    #     topic_name3: 
-    #       frequency: 1
-    #       vars: ["acc.x", "acc.y"]
-  cf_2:
+
+  cf_2: #green
     enabled: true
     uri: radio://0/100/2M/E7E7E7E7E7
-    initial_position: [0.0, 0.0, 0.0]
+    initial_position: [0.0, 0.5, 0.0]
     type: cf21  # see robot_types
   
-  cf_3:
+  cf_3: #blue
     enabled: true
     uri: radio://0/90/2M/E7E7E7E7E0
     initial_position: [0.0, 0.0, 0.0]
     type: cf21  # see robot_types
 
-  # cf5:
-  #   enabled: false
-  #   uri: radio://0/80/2M/E7E7E7E705
-  #   initial_position: [0.0, -0.5, 0.0]
-  #   type: cf21  # see robot_types
-    # firmware_params:
-    #   kalman:
-    #     pNAcc_xy: 1.0 # default 0.5
-    #firmware_logging:
-    #  custom_topics:
-    #    topic_name3: 
-    #      frequency: 1
-    #      vars: ["acc.x", "acc.y", "acc.z"]
+  cf_4: #yellow
+    enabled: true
+    uri: radio://0/85/2M/E7E7E7E7E0
+    initial_position: [0.0, -0.5, 0.0]
+    type: cf21  # see robot_types
+
 # Definition of the various robot types
 robot_types:
   cf21:
@@ -51,18 +36,6 @@ robot_types:
     battery:
       voltage_warning: 3.8  # V
       voltage_critical: 3.7 # V
-    # firmware_params:
-    #   kalman:
-    #     pNAcc_xy: 1.0 # default 0.5
-    #firmware_logging:
-    #   enabled: true
-    #   default_topics:
-    #   pose:
-    #     frequency: 1 # Hz
-    #   custom_topics:
-    #    topic_name3: 
-    #      frequency: 1
-    #      vars: ["acc.x", "acc.y", "acc.z"]
 
   cf21_mocap_deck:
     motion_capture:
@@ -74,10 +47,6 @@ robot_types:
     battery:
       voltage_warning: 3.8  # V
       voltage_critical: 3.7 # V
-
-    # firmware_params:
-    #   kalman:
-    #     pNAcc_xy: 1.0 # default 0.5
 
 # global settings for all robots
 all:
@@ -91,8 +60,6 @@ all:
         frequency: 10 # Hz
       status:
         frequency: 10 # Hz
-      odom:
-        frequency: 10
     custom_topics:
       velocity:
           frequency: 10

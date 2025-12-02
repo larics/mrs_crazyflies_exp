@@ -9,21 +9,62 @@ Again, there are two ways you can set up your computer to run the simulation:
 
 ### 1) Docker installation (recommended!!!)
 
-Clone the [repository](https://github.com/larics/docker_files/tree/master/ros2/ros2-iron/crazyflies-real-world):
+Clone this [repository](https://github.com/larics/mrs_crazyflies_exp):
 ```
-git clone https://github.com/larics/docker_files.git
+git clone https://github.com/larics/mrs_crazyflies_exp
 ```
-And follow the setup instructions  on [this link](https://github.com/larics/docker_files/tree/master/ros2/ros2-jazzy/crazyflies). This docker automatically clones and builds ROS2 mrs_crazyflies_exp package.
+If you haven't done it by this phase please before building execute this line to enable graphical applications:
+
+```
+echo "xhost +local:docker > /dev/null" >> ~/.profile
+
+```
+
+Add the following line to  `~/.bashrc` and source it, or type this command in the current terminal:
+```
+export DOCKER_BUILDKIT=1
+```
+Run Dockerfile from the project root directory using the following commands:
+```bash
+cd mrs_crazyflies_exp
+
+# Build the Dockerfile.
+docker build -t mrs_crazyflies_exp_img .
+
+# Run the crazysim_img2 container for the first time
+./first_run.sh
+
+# This will create docker container crazyswarm_container and position you into the container
+```
+
+For future runs, you can use the following commands:
+```bash
+# Start the container:
+docker start -i mrs_crazyflies_exp_cont
+
+# Open the container in another terminal, while it is already started:
+docker exec -it mrs_crazyflies_exp_cont bash
+
+# Stop the container
+docker stop mrs_crazyflies_exp_cont
+
+# Delete the container (WARNING: this will delete all data inside the container)
+docker rm mrs_crazyflies_exp_cont
+
+```
+> [!NOTE]
+> The ros2 workspace is located in /root/ros2_ws
+
 
 ### 2) Manual installation (if you already have ROS2 installed)
-> We are assuming that you have ROS2 Jazzy installed.
+> We are assuming that you have ROS2 humble installed.
 
-Please follow the instructions given on the [Bitcraze](https://www.bitcraze.io/documentation/tutorials/getting-started-with-crazyflie-2-x/#inst-comp) page to setup cfclient and  this [Crazyswarm2](https://github.com/IMRCLab/crazyswarm2) to setup ROS2 packages. Additionally check for aliases script: [https://github.com/larics/docker_files/tree/ros-iron-cf/ros2/ros2-iron/crazyflies-real-world/to_copy](https://github.com/larics/docker_files/blob/master/ros2/ros2-jazzy/crazyflies/to_copy/aliases) and README in this repository which might come in handy.
+Please follow the instructions given on the [Bitcraze](https://www.bitcraze.io/documentation/tutorials/getting-started-with-crazyflie-2-x/#inst-comp) page to setup cfclient and  this [Crazyswarm2](https://github.com/IMRCLab/crazyswarm2) to setup ROS2 packages. Additionally check for aliases README in this repository which might come in handy.
 
 The folder structure of this package is:
-1. scripts - additional node for static transformation broadcaster from world to odom is there. 
+1. scripts - folder where you can put your own scripts
 2. launch -  it contains file to launch file which starts crazyflies server, rviz and nodes for publishing velocity to crazyflies.
-3. config - here is the main yaml file for crazyflies server
+3. config - here is the main .yaml file for crazyflies server
 4. startup - it contains the example of starting the crazyflies server and velocity nodes, alongside the control.
 
 ## Topics and services

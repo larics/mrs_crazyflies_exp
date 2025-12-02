@@ -1,3 +1,3 @@
 #!/bin/bash
 
-export NUM_ROBOTS=3
+export NUM_ROBOTS=4

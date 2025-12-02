@@ -38,13 +38,13 @@ def generate_launch_description():
             'rviz' : 'True',
             }.items())),
     
-    launch_description.append(
-        Node(
-            package='mrs_crazyflies_exp',
-            executable='TransformWorld2Odom.py',
-            name='TransformWorld2Odom',
-            output='screen'
-        ))
+    # launch_description.append(
+    #     Node(
+    #         package='mrs_crazyflies_exp',
+    #         executable='TransformWorld2Odom.py',
+    #         name='TransformWorld2Odom',
+    #         output='screen'
+    #     ))
         
         # Add vel_mux nodes dynamically based on the number parameter
     for i in range(1, int(os.environ.get('NUM_ROBOTS', '3')) + 1):
